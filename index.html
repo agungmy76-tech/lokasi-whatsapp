@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kirim Lokasi Otomatis via WhatsApp (Android)</title>
+</head>
+<body>
+  <h2>Kirim Lokasi Otomatis via WhatsApp</h2>
+  <button id="sendLocationBtn">Kirim Lokasi Saya ke WhatsApp</button>
+  <p id="status"></p>
+
+  <script>
+    const whatsappNumber = '6281234567890'; // Ganti nomor tujuan
+
+    document.getElementById('sendLocationBtn').addEventListener('click', () => {
+      const status = document.getElementById('status');
+
+      if (!navigator.geolocation) {
+        status.textContent = 'Geolocation tidak didukung oleh browser Anda.';
+        return;
+      }
+
+      status.textContent = 'Mencari lokasi...';
+
+      navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        const message = `Halo, ini lokasi saya sekarang:\nhttps://maps.google.com/?q=${lat},${lon}`;
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+        status.textContent = 'Lokasi ditemukan! Membuka WhatsApp...';
+
+        window.open(whatsappURL, '_blank');
+      }, error => {
+        status.textContent = 'Gagal mendapatkan lokasi. Pastikan izin lokasi sudah diberikan.';
+      });
+    });
+  </script>
+</body>
+</html>
